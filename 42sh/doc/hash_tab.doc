@@ -1,0 +1,26 @@
+					La table de Hash
+
+
+
+La table de hash qui contient les binaires et leurs paths est un arbre a indexation directe base sur une structure simple :
+
+typedef struct				s_hash_tab
+{
+	struct s_hash_tab		*hash_tab[95];
+	char				*name;
+	char				*path;
+}					t_hash_tab;
+
+Cette structure contient :
+	->	Un tableau de pointeurs du meme type que la structure (t_hash_tab)
+			Elle fonctionne grace a la transformation du char en index grace au castage suivant :  [(int)(char - 33)]
+			Il fait 95 cases, ce qui nous fait les 95 caracteres imprimables de la table ascii,
+			elle va probablement etre reduite pour etre POSIX (les noms de binaires ne contienent que lettres, chiffres et underscores)
+	->	Un char * qui contiendra le nom du binaire
+	->	Un char * qui contiendra le path du binaire
+
+Le pointeur qui permet de l'atteindre est stocke dans la structure data.
+Il y a trois fonctions qui permettent d'interagir avec sont :
+	-> create_hash_tab() 
+	-> search_in_hash_tab()
+	-> free_hash_tab()

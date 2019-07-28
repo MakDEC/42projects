@@ -1,0 +1,54 @@
+
+					La creation de la table :
+
+Pour creer la table, on commence par splitter le path. On defile ensuite le char ** pour ajouter chaque entree du dossier a la table.
+
+Pour stocker un binaire, il faut creer un certain nombre de cases (differents en fonction des cases existantes). 
+	-> On parse tout d'abord le path et on obtient le char ** contenant /bin et /usr/bin 
+	-> On configure la premiere case (On la cree et met tous ses pointeurs a NULL)
+	-> On utilise readdir() pour parcourir le contenu des dossier et envoit chaque entree a la fonction add_cmd_to_hash_tab(); 
+	-> add_cmd_to_hash_tab() gere l'indexation directe
+
+		La fonction add_cmd_to_hash_tab()
+
+	Cette fonction va parcourir le nom du binaire a stocker. A chaque case, elle va transformer le char en index et l'utiliser pour comparer 
+	la case correspondante a cet index dans le tableaux de pointeurs de la case courante. Si la case n'existe pas, on la cree avant de se placer dessus,
+	sinon, on se place juste dessus.
+	Il y a quoi qu'il arrive une case par char du nom du binaire, mais les cases peuvent etre reutilisees.
+	
+	Pour resumer les deux etapes de la fonctions sont :
+				-> Regarder si la case existe grace au castage du char en int [(int)(char - 33)]
+				-> La creer si la case et a NULL
+				-> Se placer dessus
+
+
+	Arrive a la fin du nom du binaire, on stock son nom et son path dans les pointeurs prevus a cet effet.
+
+
+		Exemple :
+
+Imaginons que la path contient deux dossiers (/bin:/usr/bin) et que ces deux dossiers contiennent respectivement cronnext et crontab, et grep dans le deuxieme
+
+	La fonction add_cmd_to_hash_tab() va etre appellee trois fois, la premiere pour cronnext.
+
+			Premier binaire, cronnext :
+		-> Premier appel a add_cmd_to_hash_tab()
+		-> Recevant cronnext, elle va regarder dans sa case courante si la case correspondant a l'index (la valeur ascii du 'c' - 33) est a NULL.
+		-> Toutes les cases etant a NULL pour le moment elle va creer la case des 'c'
+		-> La case des 'c' existant, on se place dessus
+		-> On recommence pour chaque lettr. On cree donc la case des 'r', on se place dessus , on cree la case des 'o' ...
+		-> Arrives a la fin du nom du binaire, on se trouve sur la derniere case, tous les pointeurs du tableau de cette case sont a NULL.
+			On copie alors le nom du binaire dans la variable name et on concatene le nom du dossier et le nom du binaire pour le stocker dans la variable path
+			
+			Deuxieme binaire, crontab :
+		-> Deuxieme appel de la fonction add_cmd_to_hsah_tab(), mais cette fois la case des 'c' existe (dans la premiere case de la table), on se place dessus.
+		-> jusqu'au 'n', toutes les cases existent, on se contente donc de se placer dessus.
+		-> Sur la case des 'n', la case 't' du tableau est a NULL, on la cree et commence une nouvelle branche
+		-> On va creer les cases jusqu'a la fin du nom du binaire, puis stocker le nom et le path
+
+			Troisieme binaire, grep :
+		-> Troisieme et dernier appel a add_cmd_to_hsah_tab() 
+		-> la case des 'g' etant a NULL, on va commencer une nouvelle branche et creer toutes les branches necessaires
+
+	Apres avoir creer la table, deux pointeurs ne seront pas a NULL dans le tableau de la premiere case : la case des 'c' et la case des 'g' 
+	Le chemin logique de cronnext et crontab se split a leur 5e tandis que grep possede sa propre branche
