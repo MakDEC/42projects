@@ -200,11 +200,17 @@ $(PARSING_OBJS): $(DATA_STRUCT_H) includes/parse_buffer.h
 $(DATA_STRUCT_H): includes/data_struct.h includes/pipe_lines_struct.h includes/parsing_struct.h
 
 create_directories :
-	@mkdir -p objs/builtin/{change_directory,env,fg,jobs,local_variables}
-	@mkdir -p objs/datatools/{cleaning_functions,hash_tab,initialization_functions,sig_management}
-	@mkdir -p objs/input/{completion,deletions,input_datatools,insertions,intern_select,movements}
-	@mkdir -p objs/monitor/{execution_tools,generic_display,job_control_tools,pipeline_tools,redirection_tools,simple_command,term_and_sig_tools}
-	@mkdir -p objs/parser/{input_redirections,output_redirections,parser_datatools,special_chars}
+	@mkdir -p objs/builtin/change_directory && mkdir objs/builtin/env && mkdir objs/builtin/fg \
+		&& mkdir objs/builtin/jobs && mkdir objs/builtin/local_variables
+	@mkdir -p objs/datatools/cleaning_functions && mkdir objs/datatools/hash_tab \
+		&& mkdir objs/datatools/initialization_functions && mkdir objs/datatools/sig_management
+	@mkdir -p objs/input/completion && mkdir objs/input/deletions && mkdir objs/input/input_datatools \
+		&& mkdir objs/input/insertions && mkdir objs/input/intern_select && mkdir objs/input/movements
+	@mkdir -p objs/monitor/execution_tools && mkdir objs/monitor/generic_display && mkdir objs/monitor/job_control_tools \
+		&& mkdir objs/monitor/pipeline_tools && mkdir objs/monitor/redirection_tools && mkdir objs/monitor/simple_command \
+		&& mkdir objs/monitor/term_and_sig_tools
+	@mkdir -p objs/parser/input_redirections && mkdir objs/parser/output_redirections && mkdir objs/parser/parser_datatools \
+		&& mkdir objs/parser/special_chars
 
 
 libft_comp :
